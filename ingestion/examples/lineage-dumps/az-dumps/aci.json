@@ -1,0 +1,17 @@
+{
+  "name": "aci-pipeline-prd",
+  "resourceGroup": "rg-airflowdbtdatapipeline-prd",
+  "location": "australiaeast",
+  "containers": [
+    {
+      "name": "airflow",
+      "image": "acrpipelinedevhbwx.azurecr.io/pipeline/airflow:231",
+      "resources": { "requests": { "cpu": 1.0, "memoryInGb": 2.0 } }
+    },
+    {
+      "name": "crypt",
+      "image": "acrpipelinedevhbwx.azurecr.io/pipeline/crypt:231",
+      "resources": { "requests": { "cpu": 0.5, "memoryInGb": 1.0 } }
+    }
+  ]
+}

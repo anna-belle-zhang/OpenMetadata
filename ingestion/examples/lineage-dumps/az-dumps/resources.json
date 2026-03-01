@@ -1,0 +1,4 @@
+[
+  {"name": "kv-pipeline-prd-abc", "type": "Microsoft.KeyVault/vaults", "resourceGroup": "rg-airflowdbtdatapipeline-prd"},
+  {"name": "stpipelinedata123", "type": "Microsoft.Storage/storageAccounts", "resourceGroup": "rg-airflowdbtdatapipeline-prd"}
+]
