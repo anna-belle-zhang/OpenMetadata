@@ -280,7 +280,7 @@ The Stage 1/2 data model is forward-compatible — entity FQNs and lineage edges
 | Decision | Choice | Reason |
 |----------|--------|--------|
 | Ingestion source | File-based (az CLI dump to NTFS) | Simplest start; no SDK auth complexity in Stage 1 |
-| File location | `E:\A\infra-devops\data\az-dumps\` (NTFS) | Accessible from WSL + Airflow volume mount |
+| File location | `E:\A\OpenMetadata\ingestion\examples\data\az-dumps\` (NTFS) | Accessible from WSL + Airflow volume mount |
 | Entity modeling | Native OM types + tags | Zero OM source changes; fastest to prove value |
 | Image version | Tag on current ACI entity + historical ADO Pipeline entities | Both "what is now" and "what changed when" |
 | Progression | Stage 1 → 2 → 3 only if value proven | YAGNI — avoid over-engineering before value is clear |

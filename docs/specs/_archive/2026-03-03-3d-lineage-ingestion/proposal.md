@@ -16,11 +16,19 @@ This feature connects three lineage dimensions — DevOps (ADO pipeline runs + a
 - `stitch_lineage.py` — posts lineage edges connecting DevOps → Infra → Data entities
 - Example dump files in `ingestion/examples/lineage-dumps/`
 
-**Out of scope (Stage 1):**
+**In scope (Stage 1.5 — Deployment Audit Matrix):**
+- Add `git_sha` and `pipeline_type` to ADO dump output and `AdoRun` model
+- Store `git_sha` and `pipeline_type` as custom properties on ADO Pipeline entities
+- New `dag_enricher.py` — patches Airflow DAG entities with `image_build_ref`, `infra_deploy_ref`, `git_sha`, `run_end_timestamp`
+- Compliance audit matrix: WHO/WHAT/WHEN/WHERE/WHY/WHICH-DATA/WHICH-CODE answerable from OM for any production day
+- Delta Lake time-travel key: `run_end_timestamp` on each DAG entity usable directly as `AS OF TIMESTAMP` value
+
+**Out of scope (Stage 1 + 1.5):**
 - Airflow DAG orchestration (Stage 2)
 - Custom OM entity types, JSON schemas, UI pages (Stage 3)
 - OpenMetadata source code changes (DB migrations, new API endpoints, new UI components)
 - Automated `az login` / service principal auth
+- Triggering rollbacks (informational only — OM provides the `AS OF` key; human executes the Delta query)
 
 ## Impact
 
@@ -37,3 +45,8 @@ This feature connects three lineage dimensions — DevOps (ADO pipeline runs + a
 - [ ] Lineage graph in OM UI shows: ADO build run → ACR image → ACI container → Airflow DAG → bronze table → silver table → gold table
 - [ ] Re-running ingesters is idempotent (existing entities updated, not duplicated)
 - [ ] ADO history is append-only (old run entities not overwritten)
+- [ ] ADO Pipeline entities carry `git_sha` and `pipeline_type` custom properties
+- [ ] Airflow DAG entities carry `image_build_ref`, `infra_deploy_ref`, `git_sha`, `run_end_timestamp` custom properties
+- [ ] `run_end_timestamp` on a DAG entity is usable directly as a Delta `AS OF TIMESTAMP` value
+- [ ] `dag_enricher.py` is idempotent — re-running does not duplicate or corrupt existing properties
+- [ ] Enricher handles no prior deploy gracefully (logs warning, continues)

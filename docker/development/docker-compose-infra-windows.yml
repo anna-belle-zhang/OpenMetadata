@@ -1,0 +1,66 @@
+version: "3.9"
+
+# Minimal infrastructure for Windows-native OM development.
+# Runs ONLY OpenSearch + Airflow.
+# PostgreSQL runs natively on Windows.
+# OM Java server runs natively on Windows via Git Bash.
+# Docker Desktop for Windows handles host.docker.internal automatically.
+
+volumes:
+  os-data:
+  airflow-dag-configs:
+  airflow-tmp:
+
+services:
+
+  opensearch:
+    image: opensearchproject/opensearch:2.6.0
+    container_name: om_opensearch
+    environment:
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+      - plugins.security.disabled=true
+      - indices.query.bool.max_clause_count=4096
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - os-data:/usr/share/opensearch/data
+    healthcheck:
+      test: "curl -s http://localhost:9200/_cluster/health | grep -qE 'green|yellow'"
+      interval: 15s
+      timeout: 10s
+      retries: 10
+
+  airflow:
+    build:
+      context: ../../.
+      dockerfile: ingestion/Dockerfile.ci
+      args:
+        INGESTION_DEPENDENCY: "all"
+    container_name: om_airflow
+    environment:
+      AIRFLOW__API__AUTH_BACKENDS: "airflow.api.auth.backend.basic_auth,airflow.api.auth.backend.session"
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__OPENMETADATA_AIRFLOW_APIS__DAG_GENERATED_CONFIGS: "/opt/airflow/dag_generated_configs"
+      # Windows-native PostgreSQL via host.docker.internal (auto-resolved by Docker Desktop for Windows)
+      DB_HOST: host.docker.internal
+      DB_PORT: 5432
+      AIRFLOW_DB: airflow_db
+      DB_USER: airflow_user
+      DB_SCHEME: postgresql+psycopg2
+      DB_PASSWORD: airflow_pass
+    entrypoint: /bin/bash
+    command:
+      - "-c"
+      - "sed -i 's/\\r//' /opt/airflow/ingestion_dependency.sh && bash /opt/airflow/ingestion_dependency.sh"
+    ports:
+      - "8080:8080"
+    volumes:
+      # DAGs from this repo — relative to this compose file (docker/development/)
+      - ../../ingestion/examples/airflow/dags:/opt/airflow/dags
+      - airflow-dag-configs:/opt/airflow/dag_generated_configs
+      - airflow-tmp:/tmp
+    depends_on:
+      opensearch:
+        condition: service_healthy

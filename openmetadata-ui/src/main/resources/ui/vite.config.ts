@@ -96,6 +96,7 @@ export default defineConfig(({ mode }) => {
     },
 
     css: {
+      preprocessorMaxWorkers: 0,
       preprocessorOptions: {
         less: {
           javascriptEnabled: true,

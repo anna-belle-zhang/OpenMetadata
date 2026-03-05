@@ -11,11 +11,14 @@
 """ACI connector metadata builder."""
 
 import json
+import logging
 from dataclasses import dataclass, field
 from typing import Any
 
 from metadata.ingestion.source.pipeline.aci.connection import AciConfig
 from metadata.ingestion.source.pipeline.aci.models import AciDump
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -26,6 +29,7 @@ class AciTask:
     image: str
     cpu: float
     memory_gb: float
+    tags: list[str] = field(default_factory=list)
 
 
 @dataclass
@@ -60,9 +64,37 @@ class AciConnector:
                 image=container.image,
                 cpu=container.cpu,
                 memory_gb=container.memory_gb,
+                tags=[f"image={container.image}", f"cpu={container.cpu}"],
             )
             for container in dump.containers
         ]
         tags = [f"image_version={image_version}", f"env={env}"]
 
         return AciPipelineRequest(name=dump.name, tasks=tasks, tags=tags)
+
+    def _create_storage_entities(self) -> None:
+        """Create StorageService ACR and containers with latest_tag."""
+        self.metadata.get_or_create_service(service_name="ACR", service_type="storage")
+        for path in self.config.dumps_dir.glob("acr_tags_*.json"):
+            repo = path.stem.replace("acr_tags_", "")
+            tags = json.loads(path.read_text(encoding="utf-8"))
+            latest = tags[-1] if tags else ""
+            self.metadata.create_or_update(
+                {"name": repo, "service": "ACR", "tags": [f"latest_tag={latest}"]}
+            )
+
+    def run(self) -> int:
+        """Create pipeline service, pipeline entity, and storage containers."""
+        self.metadata.get_or_create_service(service_name="ACI-prd", service_type="pipeline")
+
+        errors = 0
+        try:
+            pipeline = self.build_pipeline_entity()
+            # Upsert pipeline to refresh tags on re-run; OM handles idempotency
+            self.metadata.create_or_update(pipeline)
+        except Exception as exc:  # pylint: disable=broad-except
+            errors += 1
+            logger.error("Failed to parse ACI dump: %s", exc)
+
+        self._create_storage_entities()
+        return errors

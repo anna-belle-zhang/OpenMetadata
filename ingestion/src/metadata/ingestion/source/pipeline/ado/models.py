@@ -1,7 +1,7 @@
 """Pydantic models for ADO run and approval dump files."""
 from datetime import datetime
 from enum import Enum
-from typing import Optional
+from typing import Literal, Optional
 
 from pydantic import BaseModel, Field
 
@@ -14,6 +14,8 @@ class RunType(str, Enum):
 class AdoRun(BaseModel):
     id: int
     name: str
+    git_sha: str
+    pipeline_type: Literal["image_build", "image_deploy", "infra_deploy"]
     result: Optional[str] = None
     start_time: Optional[datetime] = Field(None, alias="startTime")
     run_type: RunType = Field(alias="type")

@@ -80,6 +80,60 @@ def test_existing_entity_not_duplicated(config, mock_om):
     mock_om.create_or_update.assert_not_called()
 
 
+def test_build_run_has_git_sha_tag(config, mock_om):
+    # S6: GIVEN build run with git_sha WHEN connector builds requests
+    # THEN tags include git_sha value
+    from metadata.ingestion.source.pipeline.ado.metadata import AdoConnector
+    connector = AdoConnector(config=config, metadata=mock_om)
+    requests = connector.build_pipeline_requests()
+    build_req = next(r for r in requests if "232" in str(r.name))
+    tag_strs = [str(t) for t in (build_req.tags or [])]
+    assert any("abc123def456" in t for t in tag_strs)
+
+
+def test_build_run_has_pipeline_type_image_build_tag(config, mock_om):
+    # S7: GIVEN build run WHEN connector builds requests
+    # THEN tags include pipeline_type=image_build
+    from metadata.ingestion.source.pipeline.ado.metadata import AdoConnector
+    connector = AdoConnector(config=config, metadata=mock_om)
+    requests = connector.build_pipeline_requests()
+    build_req = next(r for r in requests if "232" in str(r.name))
+    tag_strs = [str(t) for t in (build_req.tags or [])]
+    assert any("image_build" in t for t in tag_strs)
+
+
+def test_deploy_run_has_pipeline_type_infra_deploy_tag(config, mock_om):
+    # S8: GIVEN deploy run WHEN connector builds requests
+    # THEN tags include pipeline_type=infra_deploy
+    from metadata.ingestion.source.pipeline.ado.metadata import AdoConnector
+    connector = AdoConnector(config=config, metadata=mock_om)
+    requests = connector.build_pipeline_requests()
+    deploy_req = next(r for r in requests if "233" in str(r.name))
+    tag_strs = [str(t) for t in (deploy_req.tags or [])]
+    assert any("infra_deploy" in t for t in tag_strs)
+
+
+def test_deploy_run_has_version_and_env_tags(config, mock_om):
+    # Missing S8 extension: deploy runs carry version and env tags
+    from metadata.ingestion.source.pipeline.ado.metadata import AdoConnector
+    connector = AdoConnector(config=config, metadata=mock_om)
+    requests = connector.build_pipeline_requests()
+    deploy_req = next(r for r in requests if "233" in str(r.name))
+    tag_strs = [str(t) for t in (deploy_req.tags or [])]
+    assert any("version=" in t for t in tag_strs)
+    assert any("env=" in t for t in tag_strs)
+
+
+def test_deploy_run_has_git_sha_tag(config, mock_om):
+    # MODIFIED scenario: deploy entity carries git_sha
+    from metadata.ingestion.source.pipeline.ado.metadata import AdoConnector
+    connector = AdoConnector(config=config, metadata=mock_om)
+    requests = connector.build_pipeline_requests()
+    deploy_req = next(r for r in requests if "233" in str(r.name))
+    tag_strs = [str(t) for t in (deploy_req.tags or [])]
+    assert any("abc123def456" in t for t in tag_strs)
+
+
 def test_malformed_runs_json_exits_nonzero(tmp_path, mock_om):
     # GIVEN ado-dumps/runs.json contains invalid JSON
     (tmp_path / "runs.json").write_text("not json")

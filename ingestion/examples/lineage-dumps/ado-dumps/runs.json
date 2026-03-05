@@ -2,20 +2,334 @@
   {
     "id": 232,
     "name": "build-231",
-    "pipeline": {"name": "build-pipeline"},
+    "pipeline": {
+      "name": "build-pipeline"
+    },
     "result": "succeeded",
     "startTime": "2026-02-18T01:00:00Z",
     "type": "build",
-    "image": "airflow:231"
+    "image": "airflow:231",
+    "git_sha": "abc123def456",
+    "pipeline_type": "image_build"
   },
   {
     "id": 233,
     "name": "infra-deploy-231",
-    "pipeline": {"name": "infra-deploy-pipeline"},
+    "pipeline": {
+      "name": "infra-deploy-pipeline"
+    },
     "result": "succeeded",
     "startTime": "2026-02-18T02:00:00Z",
     "type": "deploy",
     "version": "231",
-    "env": "prd"
+    "env": "prd",
+    "git_sha": "abc123def456",
+    "pipeline_type": "infra_deploy"
+  },
+  {
+    "id": 239,
+    "name": "20260228.1",
+    "pipeline": {
+      "name": "prd-e2e-test"
+    },
+    "result": "succeeded",
+    "startTime": "2026-02-28T10:49:27.186582Z",
+    "finishTime": "2026-02-28T11:01:43.3258355Z",
+    "type": "build",
+    "pipeline_type": "image_build",
+    "git_sha": "691fbef76bf81a31cfe93581b5f2004f741c081e",
+    "image": "$(Build.BuildId)",
+    "version": "20260228.1",
+    "env": "prd",
+    "requestedBy": "Abner Zhang"
+  },
+  {
+    "id": 238,
+    "name": "20260228.2",
+    "pipeline": {
+      "name": "dev-e2e-test"
+    },
+    "result": "succeeded",
+    "startTime": "2026-02-28T07:25:47.312538Z",
+    "finishTime": "2026-02-28T07:35:48.5079886Z",
+    "type": "build",
+    "pipeline_type": "image_build",
+    "git_sha": "75aaac020b02b6553cbeabb15e767345e4be6493",
+    "image": "$(Build.BuildId)",
+    "version": "20260228.2",
+    "env": "dev",
+    "requestedBy": "Abner Zhang"
+  },
+  {
+    "id": 237,
+    "name": "20260228.1",
+    "pipeline": {
+      "name": "dev-e2e-test"
+    },
+    "result": "failed",
+    "startTime": "2026-02-28T06:16:39.526828Z",
+    "finishTime": "2026-02-28T06:29:01.4162131Z",
+    "type": "build",
+    "pipeline_type": "image_build",
+    "git_sha": "29bf5aa9bc46a4322f3ab09cc47ef8be4466d652",
+    "image": "$(Build.BuildId)",
+    "version": "20260228.1",
+    "env": "dev",
+    "requestedBy": "Abner Zhang"
+  },
+  {
+    "id": 236,
+    "name": "20260218.2",
+    "pipeline": {
+      "name": "prd-e2e-test"
+    },
+    "result": "succeeded",
+    "startTime": "2026-02-18T00:20:26.049805Z",
+    "finishTime": "2026-02-18T00:28:35.2207828Z",
+    "type": "build",
+    "pipeline_type": "image_build",
+    "git_sha": "ca8e379e062a1353bbce9688df7606b9d49db335",
+    "image": "$(Build.BuildId)",
+    "version": "20260218.2",
+    "env": "prd",
+    "requestedBy": "Abner Zhang"
+  },
+  {
+    "id": 235,
+    "name": "20260218.1",
+    "pipeline": {
+      "name": "prd-e2e-test"
+    },
+    "result": "failed",
+    "startTime": "2026-02-18T00:05:27.080036Z",
+    "finishTime": "2026-02-18T00:15:09.2231303Z",
+    "type": "build",
+    "pipeline_type": "image_build",
+    "git_sha": "f9278c04901cbb4c50839e42d66e83742a2042c1",
+    "image": "$(Build.BuildId)",
+    "version": "20260218.1",
+    "env": "prd",
+    "requestedBy": "Abner Zhang"
+  },
+  {
+    "id": 234,
+    "name": "20260217.1",
+    "pipeline": {
+      "name": "prd-e2e-test"
+    },
+    "result": "failed",
+    "startTime": "2026-02-17T23:59:25.194876Z",
+    "finishTime": "2026-02-18T00:03:24.7012293Z",
+    "type": "build",
+    "pipeline_type": "image_build",
+    "git_sha": "d97fe31592a1c568b9b509194372c45fba35344a",
+    "image": "$(Build.BuildId)",
+    "version": "20260217.1",
+    "env": "prd",
+    "requestedBy": "Abner Zhang"
+  },
+  {
+    "id": 231,
+    "name": "20260217.3",
+    "pipeline": {
+      "name": "infra-deploy-prd"
+    },
+    "result": "failed",
+    "startTime": "2026-02-17T23:26:09.849448Z",
+    "finishTime": "2026-02-17T23:27:09.9802537Z",
+    "type": "deploy",
+    "pipeline_type": "infra_deploy",
+    "git_sha": "d97fe31592a1c568b9b509194372c45fba35344a",
+    "image": "228",
+    "version": "20260217.3",
+    "env": "prd",
+    "requestedBy": "Abner Zhang"
+  },
+  {
+    "id": 230,
+    "name": "20260217.2",
+    "pipeline": {
+      "name": "infra-deploy-prd"
+    },
+    "result": "failed",
+    "startTime": "2026-02-17T23:23:56.490630Z",
+    "finishTime": "2026-02-17T23:24:47.5092358Z",
+    "type": "deploy",
+    "pipeline_type": "infra_deploy",
+    "git_sha": "d97fe31592a1c568b9b509194372c45fba35344a",
+    "image": "20260217.2",
+    "version": "20260217.2",
+    "env": "prd",
+    "requestedBy": "Abner Zhang"
+  },
+  {
+    "id": 229,
+    "name": "20260217.1",
+    "pipeline": {
+      "name": "infra-deploy-prd"
+    },
+    "result": "failed",
+    "startTime": "2026-02-17T23:15:26.161498Z",
+    "finishTime": "2026-02-17T23:16:03.4442457Z",
+    "type": "deploy",
+    "pipeline_type": "infra_deploy",
+    "git_sha": "cef809ef24ebcf7dedea73518a37f5b213587d83",
+    "image": "latest",
+    "version": "20260217.1",
+    "env": "prd",
+    "requestedBy": "Abner Zhang"
+  },
+  {
+    "id": 228,
+    "name": "20260217.2",
+    "pipeline": {
+      "name": "dev-e2e-test"
+    },
+    "result": "succeeded",
+    "startTime": "2026-02-17T00:40:37.858294Z",
+    "finishTime": "2026-02-17T00:51:45.4647988Z",
+    "type": "build",
+    "pipeline_type": "image_build",
+    "git_sha": "1967d88f4578995357224c3001b819b8884e2f8e",
+    "image": "$(Build.BuildId)",
+    "version": "20260217.2",
+    "env": "dev",
+    "requestedBy": "Abner Zhang"
+  },
+  {
+    "id": 227,
+    "name": "20260217.1",
+    "pipeline": {
+      "name": "dev-e2e-test"
+    },
+    "result": "failed",
+    "startTime": "2026-02-17T00:16:46.530498Z",
+    "finishTime": "2026-02-17T00:34:00.9507273Z",
+    "type": "build",
+    "pipeline_type": "image_build",
+    "git_sha": "17496a968ce4fdf39840cf29b3b69105d576c9cd",
+    "image": "$(Build.BuildId)",
+    "version": "20260217.1",
+    "env": "dev",
+    "requestedBy": "Abner Zhang"
+  },
+  {
+    "id": 226,
+    "name": "20260216.5",
+    "pipeline": {
+      "name": "dev-e2e-test"
+    },
+    "result": "failed",
+    "startTime": "2026-02-16T23:50:34.997968Z",
+    "finishTime": "2026-02-17T00:12:59.0382613Z",
+    "type": "build",
+    "pipeline_type": "image_build",
+    "git_sha": "e3a3b853ea1ba097045b56097e60e4d1667450a2",
+    "image": "$(Build.BuildId)",
+    "version": "20260216.5",
+    "env": "dev",
+    "requestedBy": "Abner Zhang"
+  },
+  {
+    "id": 225,
+    "name": "20260216.2",
+    "pipeline": {
+      "name": "infra-deploy"
+    },
+    "result": "failed",
+    "startTime": "2026-02-16T22:04:27.377079Z",
+    "finishTime": "2026-02-16T22:16:34.6396099Z",
+    "type": "deploy",
+    "pipeline_type": "infra_deploy",
+    "git_sha": "6f7eccf11f1d4afad54b8121246f29ad4cef32d0",
+    "image": "",
+    "version": "20260216.2",
+    "env": "dev",
+    "requestedBy": "Abner Zhang"
+  },
+  {
+    "id": 224,
+    "name": "20260216.1",
+    "pipeline": {
+      "name": "infra-deploy"
+    },
+    "result": "failed",
+    "startTime": "2026-02-16T07:27:35.552430Z",
+    "finishTime": "2026-02-16T07:35:19.7020652Z",
+    "type": "deploy",
+    "pipeline_type": "infra_deploy",
+    "git_sha": "fa998be5ee5697e9651a40e99d9dab92dbc55296",
+    "image": "",
+    "version": "20260216.1",
+    "env": "dev",
+    "requestedBy": "Abner Zhang"
+  },
+  {
+    "id": 223,
+    "name": "20260216.4",
+    "pipeline": {
+      "name": "dev-e2e-test"
+    },
+    "result": "succeeded",
+    "startTime": "2026-02-16T06:55:08.604975Z",
+    "finishTime": "2026-02-16T07:06:01.1436113Z",
+    "type": "build",
+    "pipeline_type": "image_build",
+    "git_sha": "b41620de144a4c494beba6120eb5cec5e8df11d7",
+    "image": "$(Build.BuildId)",
+    "version": "20260216.4",
+    "env": "dev",
+    "requestedBy": "Abner Zhang"
+  },
+  {
+    "id": 222,
+    "name": "20260216.3",
+    "pipeline": {
+      "name": "dev-e2e-test"
+    },
+    "result": "succeeded",
+    "startTime": "2026-02-16T06:08:15.240081Z",
+    "finishTime": "2026-02-16T06:23:54.4738396Z",
+    "type": "build",
+    "pipeline_type": "image_build",
+    "git_sha": "b03f2ba5283382836f92b6122b9c0c2790a1244f",
+    "image": "$(Build.BuildId)",
+    "version": "20260216.3",
+    "env": "dev",
+    "requestedBy": "Abner Zhang"
+  },
+  {
+    "id": 221,
+    "name": "20260216.2",
+    "pipeline": {
+      "name": "dev-e2e-test"
+    },
+    "result": "succeeded",
+    "startTime": "2026-02-16T05:49:02.185641Z",
+    "finishTime": "2026-02-16T06:02:39.6067689Z",
+    "type": "build",
+    "pipeline_type": "image_build",
+    "git_sha": "27d75ec757477e5f6dde1e753fab00ea06785ffd",
+    "image": "$(Build.BuildId)",
+    "version": "20260216.2",
+    "env": "dev",
+    "requestedBy": "Abner Zhang"
+  },
+  {
+    "id": 220,
+    "name": "20260216.1",
+    "pipeline": {
+      "name": "dev-e2e-test"
+    },
+    "result": "failed",
+    "startTime": "2026-02-16T05:34:47.283821Z",
+    "finishTime": "2026-02-16T05:45:54.3223287Z",
+    "type": "build",
+    "pipeline_type": "image_build",
+    "git_sha": "bbcad6b44b8080ee9570b26fab9455e6ded99ef1",
+    "image": "$(Build.BuildId)",
+    "version": "20260216.1",
+    "env": "dev",
+    "requestedBy": "Abner Zhang"
   }
 ]

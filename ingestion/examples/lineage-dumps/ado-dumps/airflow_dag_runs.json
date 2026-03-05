@@ -1,0 +1,26 @@
+[
+  {
+    "dag_id": "aci_data_generation",
+    "end_date": "2026-03-04T02:42:38.733347+00:00"
+  },
+  {
+    "dag_id": "aci_dbt_cosmos_transform",
+    "end_date": "2026-03-04T02:46:02.473869+00:00"
+  },
+  {
+    "dag_id": "aci_encrypted_pipeline",
+    "end_date": "2026-03-04T02:43:14.536884+00:00"
+  },
+  {
+    "dag_id": "aci_sf_dbt_cosmos_transform",
+    "end_date": "2026-02-16T21:52:26.673997+00:00"
+  },
+  {
+    "dag_id": "aci_sf_encrypted_pipeline",
+    "end_date": "2026-03-04T02:39:37.769604+00:00"
+  },
+  {
+    "dag_id": "aci_superfund_data_generation",
+    "end_date": "2026-03-04T02:44:25.647078+00:00"
+  }
+]

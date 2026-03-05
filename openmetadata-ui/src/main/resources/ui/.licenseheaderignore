@@ -4,6 +4,7 @@
 # Husky
 ".husky/_"
 ".husky/pre-commit"
+.husky
 
 # Dependencies
 /node

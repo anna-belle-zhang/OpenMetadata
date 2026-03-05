@@ -44,6 +44,13 @@ Standalone script. Queries OM API to resolve entity FQNs, then posts lineage edg
 - `ADO/deploy-#{n}` → `ACI-prd/aci-pipeline-prd` (deploys)
 - `ACI-prd/aci-pipeline-prd` → `Airflow/{dag}` (runs)
 
+### dag_enricher.py (Stage 1.5)
+Standalone script. Runs after ADO connector and Airflow connector complete. For each Airflow DAG entity that has a `PipelineStatus.endDate`, finds the most recent ADO image build and infra deploy on or before that date, then patches four custom properties onto the DAG entity:
+- `image_build_ref` — FQN of active ADO build Pipeline
+- `infra_deploy_ref` — FQN of active ADO infra deploy Pipeline
+- `git_sha` — propagated from the active build entity
+- `run_end_timestamp` — ISO-8601 string from `PipelineStatus.endDate`; use directly as Delta `AS OF TIMESTAMP` value
+
 ## Data Flow
 
 ```
@@ -60,6 +67,10 @@ ADO REST API → ado-dumps/*.json
                               → POST /api/v1/pipelines
 
               stitch_lineage.py → PUT /api/v1/lineage
+
+              dag_enricher.py   → GET  /api/v1/pipelines (ADO entities, filter by pipeline_type)
+                                → GET  /api/v1/pipelines (Airflow entities + PipelineStatus)
+                                → PATCH /api/v1/pipelines/{fqn} (custom properties)
 ```
 
 ## Error Handling
@@ -68,6 +79,7 @@ ADO REST API → ado-dumps/*.json
 - Connectors: skip individual entities on mapping errors, log and continue; report summary at end
 - Stitch: if a referenced entity FQN does not exist in OM, log warning and skip that edge
 - All scripts: exit with non-zero code on any unrecoverable error
+- `dag_enricher.py`: no prior ADO deploy before DAG run date → skip + warn, continue; DAG has no PipelineStatus → skip silently; OM API failure during patch → raise and halt
 
 ## Dependencies
 

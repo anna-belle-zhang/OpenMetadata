@@ -6,7 +6,9 @@
     "result": "succeeded",
     "startTime": "2026-02-18T01:00:00Z",
     "type": "build",
-    "image": "airflow:231"
+    "image": "airflow:231",
+    "git_sha": "abc123def456",
+    "pipeline_type": "image_build"
   },
   {
     "id": 233,
@@ -16,6 +18,20 @@
     "startTime": "2026-02-18T02:00:00Z",
     "type": "deploy",
     "version": "231",
-    "env": "prd"
+    "env": "prd",
+    "git_sha": "abc123def456",
+    "pipeline_type": "infra_deploy"
+  },
+  {
+    "id": 234,
+    "name": "image-deploy-231",
+    "pipeline": {"name": "image-deploy-pipeline"},
+    "result": "succeeded",
+    "startTime": "2026-02-18T03:00:00Z",
+    "type": "deploy",
+    "version": "231",
+    "env": "stg",
+    "git_sha": "abc123def456",
+    "pipeline_type": "image_deploy"
   }
 ]

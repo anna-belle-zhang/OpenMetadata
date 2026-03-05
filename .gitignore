@@ -28,6 +28,9 @@ catalog-services/catalog-services.iml
 # local docker volume
 docker/development/docker-volume
 docker-volume
+
+# local airflow/dbt workspace
+airflowdbt/
 docker/docker-compose-quickstart/docker-volume
 docker/docker-compose-quickstart/docker-volumes
 # Java template
