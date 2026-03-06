@@ -8,7 +8,7 @@ Single Airflow DAG (`audit_postgres_pipeline`, daily 02:00) in OM-managed Airflo
 [setup_om_entities] → [ado_ingest] → [airflow_ingest] → [refresh_mv] → [daily_report]
 ```
 
-Secrets (ADO PAT, Postgres creds, prod Airflow creds) retrieved from OM Secret Manager at runtime.
+Secrets (ADO PAT, Postgres creds, prod Airflow creds) injected via environment variables set on the Airflow container.
 
 ## Components
 
@@ -47,7 +47,7 @@ daily_audit_summary → SQL query → audit-YYYY-MM-DD.md
 
 ## Dependencies
 
-- OM Secret Manager (all credentials)
+- Environment variables for all credentials (`ADO_PAT`, `POSTGRES_*`, `AIRFLOW_BASE_URL`, etc.)
 - Live ADO REST API (PAT auth)
 - Prod Airflow REST API (`AIRFLOW_BASE_URL`, configurable; defaults to `localhost:8080`)
 - OM Python SDK (`ometa_api.OpenMetadata`) for entity registration

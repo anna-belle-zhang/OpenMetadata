@@ -40,7 +40,7 @@ Prod Airflow REST API (AIRFLOW_BASE_URL) ──▶ audit.airflow_dag_executions
 audit_db exposed to OpenMetadata (postgres_pipeline service, registered by DAG on first run)
 ```
 
-**Secrets:** All credentials (ADO PAT, Postgres, prod Airflow user/pass) retrieved from OM Secret Manager at runtime.
+**Secrets:** All credentials (ADO PAT, Postgres, prod Airflow user/pass) injected via environment variables set on the Airflow container.
 
 **Airflow URL:** Configurable via `AIRFLOW_BASE_URL` env var; defaults to `localhost:8080` (self) for local dev; points to separate prod Airflow in production.
 
@@ -80,7 +80,7 @@ pipeline_type: Literal["image_build", "image_deploy", "infra_deploy"]
 Two async scripts (`asyncio` + `asyncpg` + `aiohttp`), each running as a task in the Airflow DAG.
 
 **`ado_postgres_ingestion.py`**
-1. Fetch ADO PAT + Postgres creds from OM Secret Manager.
+1. Read ADO PAT + Postgres creds from environment variables.
 2. Since-marker: `SELECT max(queue_time) FROM audit.ado_pipeline_runs WHERE ingested_by = 'ado_postgres_ingestion'`; fallback to `now() - LOOKBACK_DAYS` (default 30).
 3. Page ADO Runs API (`GET /{org}/{project}/_apis/pipelines/runs?minTime=...`); fetch approvals separately, join on `run_id`.
 4. Parse into `AdoRun`/`AdoApproval` (reuse existing models from `ingestion/.../ado/models.py`).
@@ -89,7 +89,7 @@ Two async scripts (`asyncio` + `asyncpg` + `aiohttp`), each running as a task in
 7. Retry with jitter on 429/5xx (max 3); log + skip malformed rows; `DRY_RUN=True` prints without writing.
 
 **`airflow_postgres_ingestion.py`**
-1. Fetch prod Airflow creds + Postgres creds from OM Secret Manager.
+1. Read prod Airflow creds + Postgres creds from environment variables.
 2. Connect to `AIRFLOW_BASE_URL` (default `localhost:8080`).
 3. Since-marker: `max(execution_date)` from `airflow_dag_executions`; fallback to `now() - LOOKBACK_DAYS`.
 4. Page `GET /api/v1/dags` → `GET /api/v1/dags/{dag_id}/dagRuns?start_date_gte=...`.
@@ -103,7 +103,7 @@ Config env vars: `ADO_PAT`, `ADO_ORG_URL`, `ADO_PROJECT`, `AIRFLOW_BASE_URL`, `P
 - Materialized view `audit.daily_audit_summary` (refreshed by DAG after both ingestors complete): groups by audit_date, source_system ('ADO'/'Airflow'), env, job_name.
 - Metrics per group: total runs, successes, failures, success_rate, avg/max duration, approval_count & approval_pct (ADO deploys, prd env).
 - Report generator `audit_daily_report.py`:
-  - Inputs: Postgres creds (from OM Secret Manager), `REPORT_DATE` (default yesterday), `REPORT_OUTPUT_DIR` (default `reports/`).
+  - Inputs: Postgres creds (from env vars), `REPORT_DATE` (default yesterday), `REPORT_OUTPUT_DIR` (default `reports/`).
   - Sections: executive summary by source/env; top N failures; longest runs; missing approvals (prd deploys with approval_pct < 100%); counts by pipeline/dag.
   - Output: `reports/audit-YYYY-MM-DD.md` (disk only).
 

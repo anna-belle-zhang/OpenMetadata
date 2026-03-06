@@ -49,6 +49,18 @@ services:
       DB_USER: airflow_user
       DB_SCHEME: postgresql+psycopg2
       DB_PASSWORD: airflow_pass
+      # Audit pipeline credentials (set via your local .env file)
+      ADO_PAT: "${ADO_PAT:-}"
+      ADO_ORG_URL: "https://dev.azure.com/abnerzhang"
+      ADO_PROJECT: "AzureDataPlatformCICD"
+      POSTGRES_HOST: "host.docker.internal"
+      POSTGRES_PORT: "5432"
+      POSTGRES_DB: "audit_db"
+      POSTGRES_USER: "airflow_user"
+      POSTGRES_PASSWORD: "airflow_pass"
+      AIRFLOW_BASE_URL: "http://host.docker.internal:8080"
+      AIRFLOW_INSTANCE: "localhost"
+      LOOKBACK_DAYS: "7"
     entrypoint: /bin/bash
     command:
       - "-c"
